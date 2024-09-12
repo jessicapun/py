@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'listings.apps.ListingsConfig',
     'realtors.apps.RealtorsConfig',
     'accounts.apps.AccountsConfig',
+    'contacts.apps.ContactsConfig',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,4 @@ MEDIA_URL = '/media/'
 MESSAGE_TAGS = {
     messages.ERROR : 'danger',
 }
+

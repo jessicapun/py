@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {%load humanize%} {% block content %}
+{% extends 'base.html' %} {%load humanize%} 
+{% block title %} {{listing.title}} {% endblock %}
+{% block content %}
 <section id="showcase-inner" class="py-5 text-white">
     <div class="container">
       <div class="row text-center">
@@ -177,12 +179,7 @@
 
           <!-- Description -->
           <div class="row mb-5">
-            <div class="col-md-12">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Mollitia recusandae esse reiciendis officia omnis non rerum
-              dicta cupiditate nostrum molestias deserunt aut minus inventore
-              animi atque, consequuntur ad fugit. Possimus culpa blanditiis
-              repellendus ipsa similique ullam, natus error dolor harum.
+            <div class="col-md-12">{{listing.description}}
             </div>
           </div>
         </div>
@@ -196,6 +193,7 @@
             <div class="card-body">
               <h5 class="card-title">Property Realtor</h5>
               <h6 class="text-secondary">{{listing.realtor}}</h6>
+              <h8 class="card-title">{{listing.realtor.description}}
             </div>
           </div>
           <button
@@ -221,7 +219,16 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form action="{% url 'contact' %}" method="POST">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+            <input type='hidden' name='user_id' value="{{user.id}}" />
+            {% else%}
+            <input type='hidden' name='user_id' value"0" />
+            {% endif %}
+            <!--add realtor email-->
+            <input type='hidden' name="realtor_email" value="{{listing.realtor.email}}"/>
+            <input type='hidden' name="listing_id" value="{{listing.id}}"/>
             <div class="form-group">
               <label for="property_name" class="col-form-label"
                 >Property:</label
@@ -230,20 +237,24 @@
                 type="text"
                 name="listing"
                 class="form-control"
-                value="45 Prince Street"
-                disabled
+                value="{{listing.title}}"
+                
               />
             </div>
             <div class="form-group">
               <label for="name" class="col-form-label">Name:</label>
-              <input type="text" name="name" class="form-control" required />
+              <input type="text" name="name" class="form-control" 
+              {% if user.is_authenticated %}
+              value="{{user.first_name}} {{user.last_name}}"
+              {% endif %}
+              required />
             </div>
             <div class="form-group">
               <label for="email" class="col-form-label">Email:</label>
-              <input
-                type="email"
-                name="email"
-                class="form-control"
+              <input type="email" name="email" class="form-control"
+              {% if user.is_authenticated %}
+              value="{{user.email}}"
+              {% endif %}
                 required
               />
             </div>
